@@ -17,7 +17,6 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
-import android.view.animation.Transformation
 import androidx.lifecycle.*
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
@@ -31,7 +30,7 @@ class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
 
-    private var viewModelJob = Job()
+    private var viewModelJob: CompletableJob = Job()
 
     override fun onCleared() {
         super.onCleared()
@@ -49,9 +48,9 @@ class SleepTrackerViewModel(
     }
 
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
-    val navigateToSleepQuality : LiveData<SleepNight> = _navigateToSleepQuality
+    val navigateToSleepQuality: LiveData<SleepNight> = _navigateToSleepQuality
 
-    fun doneNavigating(){
+    fun doneNavigating() {
         _navigateToSleepQuality.value = null
     }
 

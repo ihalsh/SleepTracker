@@ -22,8 +22,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import org.koin.android.ext.android.inject
 
 /**
  * Fragment that displays a list of clickable icons,
@@ -32,6 +36,8 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  * and the database is updated.
  */
 class SleepQualityFragment : Fragment() {
+
+    private val dataSource: SleepDatabaseDao by inject()
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -47,6 +53,24 @@ class SleepQualityFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
+        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
+
+        val viewModelFactory = SleepQualityViewModelFactory(arguments.sleepNightKey, dataSource)
+
+        val sleepQualityViewModel =
+                ViewModelProvider(this, viewModelFactory)[SleepQualityViewModel::class.java]
+
+        binding.sleepQualityViewModel = sleepQualityViewModel
+
+        sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner)
+        {
+            if (it == true) {
+                findNavController()
+                        .navigate(SleepQualityFragmentDirections
+                                .actionSleepQualityFragmentToSleepTrackerFragment())
+                sleepQualityViewModel.doneNavigating()
+            }
+        }
         return binding.root
     }
 }
