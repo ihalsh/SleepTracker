@@ -74,6 +74,9 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$version_room"
 
+    //Koin
+    implementation "org.koin:koin-androidx-viewmodel:2.0.1"
+    implementation "org.koin:koin-android:2.0.1"
 
     // Testing
     testImplementation 'junit:junit:4.12'
