@@ -62,10 +62,16 @@ class SleepTrackerFragment : Fragment() {
             }
         }
 
+        val adapter = SleepNightAdapter()
+
+        binding.sleepList.adapter = adapter
+
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner) { adapter.data = it }
+
         sleepTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner) {
             if (it) {
                 Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
+                        requireActivity().findViewById(android.R.id.content),
                         getString(R.string.cleared_message),
                         Snackbar.LENGTH_SHORT
                 ).show()
