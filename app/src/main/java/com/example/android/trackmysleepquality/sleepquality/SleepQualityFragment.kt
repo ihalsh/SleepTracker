@@ -37,7 +37,7 @@ import org.koin.android.ext.android.inject
  */
 class SleepQualityFragment : Fragment() {
 
-    private val dataSource: SleepDatabaseDao by inject()
+    private val dataSource by inject<SleepDatabaseDao>()
 
     /**
      * Called when the Fragment is ready to display content to the screen.
