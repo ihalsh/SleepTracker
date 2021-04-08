@@ -66,7 +66,7 @@ class SleepTrackerFragment : Fragment() {
 
         binding.sleepList.adapter = adapter
 
-        sleepTrackerViewModel.nights.observe(viewLifecycleOwner) { adapter.data = it }
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner) { adapter.submitList(it) }
 
         sleepTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner) {
             if (it) {
