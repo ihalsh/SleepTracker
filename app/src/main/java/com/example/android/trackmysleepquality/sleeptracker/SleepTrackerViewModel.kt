@@ -32,11 +32,6 @@ class SleepTrackerViewModel(
 
     private var viewModelJob: CompletableJob = Job()
 
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var tonight = MutableLiveData<SleepNight?>()
@@ -60,14 +55,15 @@ class SleepTrackerViewModel(
     }
 
     private var _showSnackBarEvent = MutableLiveData<Boolean>()
-    val showSnackBarEvent : LiveData<Boolean> = _showSnackBarEvent
 
+    val showSnackBarEvent: LiveData<Boolean> = _showSnackBarEvent
     fun doneShowingSnackBar() {
         _showSnackBarEvent.value = false
     }
 
-    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
-    val navigateToSleepQuality: LiveData<SleepNight> = _navigateToSleepQuality
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight?>()
+
+    val navigateToSleepQuality: LiveData<SleepNight?> = _navigateToSleepQuality
 
     fun doneNavigating() {
         _navigateToSleepQuality.value = null
@@ -134,6 +130,22 @@ class SleepTrackerViewModel(
         withContext(Dispatchers.IO) {
             database.clear()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    private val _navigateToSleepDataQuality = MutableLiveData<Long?>()
+    val navigateToSleepDataQuality: LiveData<Long?> = _navigateToSleepDataQuality
+
+    fun onSleepNightClicked(id: Long) {
+        _navigateToSleepDataQuality.value = id
+    }
+
+    fun onSleepDataQualityNavigated() {
+        _navigateToSleepDataQuality.value = null
     }
 }
 

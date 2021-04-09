@@ -3,6 +3,8 @@ package com.example.android.trackmysleepquality.di
 import androidx.room.Room
 import com.example.android.trackmysleepquality.SleepTrackerApplication
 import com.example.android.trackmysleepquality.database.SleepDatabase
+import com.example.android.trackmysleepquality.sleepdetail.SleepDetailViewModel
+import com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel
 import com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -24,7 +26,7 @@ val appModule = module {
 }
 
 val viewModelModule = module {
-    viewModel {
-        SleepTrackerViewModel(get(), get())
-    }
+    viewModel { SleepTrackerViewModel(get(), get()) }
+    viewModel { (nightKey: Long) -> SleepQualityViewModel(nightKey, get()) }
+    viewModel { (nightKey: Long) -> SleepDetailViewModel(nightKey, get()) }
 }

@@ -27,7 +27,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import com.example.android.trackmysleepquality.sleepdetail.SleepDetailFragmentArgs
+import com.example.android.trackmysleepquality.sleepdetail.SleepDetailViewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Fragment that displays a list of clickable icons,
@@ -37,7 +41,9 @@ import org.koin.android.ext.android.inject
  */
 class SleepQualityFragment : Fragment() {
 
-    private val dataSource by inject<SleepDatabaseDao>()
+    private val sleepQualityViewModel: SleepQualityViewModel by viewModel {
+        parametersOf(SleepQualityFragmentArgs.fromBundle(requireArguments()).sleepNightKey)
+    }
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -50,15 +56,6 @@ class SleepQualityFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepQualityBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_quality, container, false)
-
-        val application = requireNotNull(this.activity).application
-
-        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
-
-        val viewModelFactory = SleepQualityViewModelFactory(arguments.sleepNightKey, dataSource)
-
-        val sleepQualityViewModel =
-                ViewModelProvider(this, viewModelFactory)[SleepQualityViewModel::class.java]
 
         binding.sleepQualityViewModel = sleepQualityViewModel
 
