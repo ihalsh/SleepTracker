@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -63,7 +64,9 @@ class SleepTrackerFragment : Fragment() {
             }
         }
 
-        val adapter = SleepNightAdapter()
+        val adapter = SleepNightAdapter(SleepNightListener { nightId ->
+            showSnackBar(nightId.toString())
+        })
 
         binding.sleepList.adapter = adapter
 
@@ -75,15 +78,24 @@ class SleepTrackerFragment : Fragment() {
 
         sleepTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner) {
             if (it) {
-                Snackbar.make(
-                        requireActivity().findViewById(android.R.id.content),
-                        getString(R.string.cleared_message),
-                        Snackbar.LENGTH_SHORT
-                ).show()
+                showSnackBar(getString(R.string.cleared_message))
                 sleepTrackerViewModel.doneShowingSnackBar()
             }
         }
 
         return binding.root
     }
+
+    private fun showSnackBar(text: String) {
+        Snackbar.make(
+                requireActivity().findViewById(android.R.id.content),
+                text,
+                Snackbar.LENGTH_SHORT
+        ).show()
+    }
 }
+
+class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
+    fun onClick(night: SleepNight) = clickListener(night.nightId)
+}
+
