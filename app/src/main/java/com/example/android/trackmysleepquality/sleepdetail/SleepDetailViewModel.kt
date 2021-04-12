@@ -32,12 +32,7 @@ import kotlinx.coroutines.Job
  */
 class SleepDetailViewModel(
         private val sleepNightKey: Long = 0L,
-        dataSource: SleepDatabaseDao) : ViewModel() {
-
-    /**
-     * Hold a reference to SleepDatabase via its SleepDatabaseDao.
-     */
-    val database = dataSource
+        database: SleepDatabaseDao) : ViewModel() {
 
     private val night = MediatorLiveData<SleepNight>()
 
@@ -72,5 +67,3 @@ class SleepDetailViewModel(
         _navigateToSleepTracker.value = true
     }
 }
-
- 

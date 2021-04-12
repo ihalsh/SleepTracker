@@ -29,6 +29,7 @@ import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -36,8 +37,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * (Because we have not learned about RecyclerView yet.)
  */
 class SleepTrackerFragment : Fragment() {
-
-    private val sleepTrackerViewModel by viewModel<SleepTrackerViewModel>()
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -50,6 +49,10 @@ class SleepTrackerFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
+
+        val app = requireNotNull(activity).application
+
+        val sleepTrackerViewModel by viewModel<SleepTrackerViewModel> { parametersOf(app) }
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 

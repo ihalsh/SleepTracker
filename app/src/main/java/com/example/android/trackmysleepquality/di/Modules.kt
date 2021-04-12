@@ -3,6 +3,7 @@ package com.example.android.trackmysleepquality.di
 import androidx.room.Room
 import com.example.android.trackmysleepquality.SleepTrackerApplication
 import com.example.android.trackmysleepquality.database.SleepDatabase
+import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.sleepdetail.SleepDetailViewModel
 import com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel
 import com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel
@@ -18,15 +19,13 @@ val dbModule = module {
                 .fallbackToDestructiveMigration()
                 .build()
     }
-    single { get<SleepDatabase>().sleepDatabaseDao }
-}
-
-val appModule = module {
-    single { SleepTrackerApplication() }
+    single<SleepDatabaseDao> { get<SleepDatabase>().sleepDatabaseDao }
 }
 
 val viewModelModule = module {
-    viewModel { SleepTrackerViewModel(get(), get()) }
-    viewModel { (nightKey: Long) -> SleepQualityViewModel(nightKey, get()) }
-    viewModel { (nightKey: Long) -> SleepDetailViewModel(nightKey, get()) }
+    viewModel { (application: SleepTrackerApplication) ->
+        SleepTrackerViewModel(get<SleepDatabaseDao>(), application)
+    }
+    viewModel { (nightKey: Long) -> SleepQualityViewModel(nightKey, get<SleepDatabaseDao>()) }
+    viewModel { (nightKey: Long) -> SleepDetailViewModel(nightKey, get<SleepDatabaseDao>()) }
 }
